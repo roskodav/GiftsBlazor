@@ -1,0 +1,49 @@
+﻿@page "/"
+@using Gifts.Shared
+@inject HttpClient Http
+
+<h1>Dárky a přání</h1>
+
+<div class="users-panel">
+
+
+    <div class="row">
+        <div class="col">
+            <UserCardMain />
+        </div>
+    </div>
+
+    @for (int i = 0; i < users?.Length - 1; i += 2)
+    {
+        @if (users == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    @if (users.Length - 1 > i)
+                    {
+                        <UserCard />
+                    }
+                </div>
+                <div class="col">
+                    @if (users.Length - 1 > i + 1)
+                    {
+                        <UserCard />
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@functions {
+    User[] users;
+
+    protected override async Task OnInitAsync()
+    {
+        users = await Http.GetJsonAsync<User[]>("api/User/GetAll");
+    }
+}
